@@ -8,6 +8,9 @@ latter will be a map that is composited with the relevant aspects of the
 campaign
 """
 
+from __future__ import annotations
+from dem_objects import LinkedList
+
 
 class Dungeon:
     """
@@ -17,10 +20,11 @@ class Dungeon:
     == Public Attributes ==
     TODO: Fill this out
 
-    == Private Attributes ==
-    _map:
-        The map upon which this campaign takes place
     """
+    # == Private Attributes ==
+    # _map:
+    #   The map upon which this campaign takes place
+    pass
 
 
 class Map:
@@ -33,4 +37,46 @@ class Map:
         nation, a house within a city, etc). While the way a location is
         organized may change, the actual sub-locations will not, and as such this
         is an immutable type.
+    """
+    pass
+
+
+class Character:
+    """
+    A character within this campaign. This is an abstract class.
+
+    TODO: Implement this
+        Characters will have a LinkedList of communities they belong to, in
+        order of "size," to represent priority. Such that, If something happens
+        within that community, it affects everyone. Or something.
+    """
+
+    communities: LinkedList
+
+
+class Player(Character):
+    """
+    A player of this campaign.
+
+    TODO: Implement this
+    """
+
+
+class NonPlayer(Character):
+    """
+    A non-player character.
+
+    TODO: Implement this
+    """
+
+
+class Community:
+    """
+    A Community is a grouping of characters. Sometimes it is a city, sometimes
+    a family, and sometimes just an arbitrary way of segmenting similar
+    characters.
+
+    TODO: Implement this
+        I've gotta composite this with a map, in the case of people of the same
+        city, for example. Or househould.
     """
