@@ -29,21 +29,44 @@ class Dungeon:
         """
 
 
-class Character:
+class WorldAsset:
+    """
+    A non-player entity within the world, such as communities and non-player
+    characters
+
+    == Public Attributes ==
+    name:
+        The name of this WorldAsset
+    event_log:
+
+    """
+    name: str
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+
+class Character(WorldAsset):
     """
     A character within this campaign. This is an abstract class.
 
+    == Public Attributes ==
+    name:
+        This Character instance's name
+    communities:
+        A list of communities of which this Character instance is a direct
+        member (i.e. supercommunities are not listed)
+
     TODO: Implement this
-        Characters will have a LinkedList of communities they belong to, in
-        order of "size," to represent priority. Such that, If something happens
-        within that community, it affects everyone. Or something.
     """
+    name: str
     communities: List[Community]
 
-    def __init__(self, name: str, comm: Community) -> None:
+    def __init__(self, name: str, comms: List[Community]) -> None:
         """
         Initialize a character
         """
+        WorldAsset.__init__(self, name)
 
 
 class Player(Character):
