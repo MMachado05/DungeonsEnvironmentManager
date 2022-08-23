@@ -6,13 +6,21 @@ campaign
 """
 
 from __future__ import annotations
-from typing import List, Set
+import exceptions
+from typing import List, Optional, Union
+
+# Names for primary communities
+PARTY = "Party"
+WORLD = "World"
 
 
 class Dungeon:
     """
     A Dungeon instance. Hold all relevant "interacteable" aspects of the
     campaign.
+
+    TODO: Maybe I'll make all classes private? Since the main module will
+    interface directly with an instance of this class. Maybe.
 
     == Public Attributes ==
     party:
@@ -23,10 +31,11 @@ class Dungeon:
     party: Community
     world: Community
 
-    def __init__(self) -> None:
+    def __init__(self, players: List[Player]) -> None:
         """
-        Initialize a Dungeon
+        Initialize a Dungeon instance.
         """
+        self.party = Community()  # TODO: How is this initialized?
 
 
 class WorldAsset:
@@ -37,13 +46,92 @@ class WorldAsset:
     == Public Attributes ==
     name:
         The name of this WorldAsset
+    parent_communities:
+        A list of communities this asset immediately belongs to, or None if
+        this is the primary campaign community
     event_log:
-
+        A
     """
     name: str
+    parent_communities: Optional[List[Community]]
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, supercomms: Optional[List[Community]] = None) \
+            -> None:
+        """
+        Initialize a WorldAsset instance. If supercomms is not provided,
+        initialize the primary
+        """
         self.name = name
+
+
+class Community(WorldAsset):
+    """
+    A Community is a grouping of characters. Sometimes it is a city, sometimes
+    a family, and sometimes just an arbitrary way of segmenting similar
+    characters.
+
+    == Public Attributes ==
+    members:
+        A set of Characters belonging to this community.
+    subcommunities:
+        The communities that lie *under* this one, such as families in a city,
+        or guilds in a Kingdom
+    supercommunity:
+        The community this community belongs to
+    """
+    members: set
+
+    def __init__(self):
+        WorldAsset.__init__(self, 'test')
+        self.members = set()
+        # TODO: Finish this
+        #   If there is no supercommunity, this MUST be named "World"
+
+    def __contains__(self, item: WorldAsset) -> bool:
+        """
+        If <item> is a community, return True if it is a subcommunity of this
+        community.
+        If <item> is a Character, return true if it is in this community.
+        If <item> is not a WorldAsset, raise InvalidWorldAsset error.
+        """
+        if isinstance(item, Character):
+            return self._contains_char_case(item)
+        elif isinstance(item, Community):
+            return self._contains_comm_case(item)
+
+        raise exceptions.InvalidWorldAsset
+
+    def _contains_char_case(self, character: Character) -> bool:
+        """
+        A helper for __contains__, taking care of the Character case.
+        """
+
+    def _contains_comm_case(self, community: Community) -> bool:
+        """
+        A helper for __contains__, taking care of the Community case.
+        """
+
+    def add_character(self, character: Character) -> bool:
+        """
+        Add <character> as a direct member of this community
+
+        Return True if this was successful, False otherwise (character
+        was already a part of the community, INCLUDING supercommunities)
+
+        TODO: Don't include this here, but when the USER is adding a character,
+            check they didn't mean to add it to a SUBcommunity.
+        """
+        if character not in self:
+            self.members.add(character)
+            return True
+        return False
+
+    def add_subcommunity(self, comm: Community) -> bool:
+        """
+        Add <comm> as a direct subcommunity of this community
+
+        TODO: Same as add_character, double check with user
+        """
 
 
 class Character(WorldAsset):
@@ -76,6 +164,9 @@ class Player(Character):
     TODO: Implement this
     """
 
+    def __init__(self, name):
+        Character.__init__(self, name, [])
+
 
 class NonPlayer(Character):
     """
@@ -84,20 +175,3 @@ class NonPlayer(Character):
     TODO: Implement this
     """
 
-
-class Community:
-    """
-    A Community is a grouping of characters. Sometimes it is a city, sometimes
-    a family, and sometimes just an arbitrary way of segmenting similar
-    characters.
-
-    TODO: Implement this
-        I've gotta composite this with a map, in the case of people of the same
-        city, for example. Or household.
-    """
-    # == Private Attributes ==
-    # _subcommunities
-    #   The communities that lie *under* this one, such as families in a city,
-    #   or guilds in a Kingdom
-    # _supercommunity
-    #   The community this community belongs to
