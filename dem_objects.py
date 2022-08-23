@@ -1,6 +1,9 @@
 """
 A place to hold all new objects of my design to help with organizing the
 campaign.
+
+This is mostly just ADTs learned about in class that I feel will be useful
+going forward.
 """
 
 from __future__ import annotations

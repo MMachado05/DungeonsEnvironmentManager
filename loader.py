@@ -4,7 +4,7 @@ This module will serve to hold the functions relating to loading and unloading
 
 TODO: Decide how to save DEM files
     1. Maybe I could do a folder, and within that folder, include files?
-    2. One big ass file (this seems impractical and messy)
+    2. One massive file (this seems impractical and messy)
 """
 import os
 

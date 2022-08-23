@@ -6,15 +6,10 @@ modules frequently, and I will try to keep it as simple as possible, delegating
 most of the heavy lifting to other modules.
 """
 
-
-class Dungeon:
-    """
-    A Dungeons and Dragons environment. Will contain all variables regarding
-    the management of the environment
-    """
+import campaign
+import loader
 
 
 if __name__ == '__main__':
     pass
-    # TODO: Write this shit, cracka.
-    #   This is gonna be the main block that runs the whole damn program
+    # TODO: Write this, which will be what runs the actual program (executable)

@@ -1,15 +1,12 @@
 """
-First of all, I'm gonna get rid of all the "DEM"s that I've got in these files.
-They're redundant.
-
-Second of all, this will house the Dungeon and Map classes, the former of which
+This will house the Dungeon and Map classes, the former of which
 will organize all aspects of the campaign (i.e. NPCs, Communities, etc.) and the
 latter will be a map that is composited with the relevant aspects of the
 campaign
 """
 
 from __future__ import annotations
-from dem_objects import LinkedList
+from typing import List, Set
 
 
 class Dungeon:
@@ -18,27 +15,18 @@ class Dungeon:
     campaign.
 
     == Public Attributes ==
-    TODO: Fill this out
-
+    party:
+        The Player Party community
+    world:
+        The highest-level community
     """
-    # == Private Attributes ==
-    # _map:
-    #   The map upon which this campaign takes place
-    pass
+    party: Community
+    world: Community
 
-
-class Map:
-    """
-    TODO: What exactly is this?
-
-    == Private attributes ==
-    _maps:
-        A tuple of sub-maps within this map (i.e. a map of a city within a
-        nation, a house within a city, etc). While the way a location is
-        organized may change, the actual sub-locations will not, and as such this
-        is an immutable type.
-    """
-    pass
+    def __init__(self) -> None:
+        """
+        Initialize a Dungeon
+        """
 
 
 class Character:
@@ -50,8 +38,12 @@ class Character:
         order of "size," to represent priority. Such that, If something happens
         within that community, it affects everyone. Or something.
     """
+    communities: List[Community]
 
-    communities: LinkedList
+    def __init__(self, name: str, comm: Community) -> None:
+        """
+        Initialize a character
+        """
 
 
 class Player(Character):
@@ -78,5 +70,11 @@ class Community:
 
     TODO: Implement this
         I've gotta composite this with a map, in the case of people of the same
-        city, for example. Or househould.
+        city, for example. Or household.
     """
+    # == Private Attributes ==
+    # _subcommunities
+    #   The communities that lie *under* this one, such as families in a city,
+    #   or guilds in a Kingdom
+    # _supercommunity
+    #   The community this community belongs to
