@@ -7,7 +7,7 @@ campaign
 
 from __future__ import annotations
 import exceptions
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Set
 
 # Names for primary communities
 PARTY = "Party"
@@ -64,6 +64,7 @@ class WorldAsset:
         self.name = name
 
 
+# noinspection SpellCheckingInspection
 class Community(WorldAsset):
     """
     A Community is a grouping of characters. Sometimes it is a city, sometimes
@@ -79,11 +80,13 @@ class Community(WorldAsset):
     supercommunity:
         The community this community belongs to
     """
-    members: set
+    members: Set[Character]
+    subcommunities: Set[Community]
 
     def __init__(self):
         WorldAsset.__init__(self, 'test')
         self.members = set()
+        self.subcommunities = set()
         # TODO: Finish this
         #   If there is no supercommunity, this MUST be named "World"
 
@@ -105,6 +108,18 @@ class Community(WorldAsset):
         """
         A helper for __contains__, taking care of the Character case.
         """
+        # Check if the character is a first-level member
+        if character in self.members:
+            return True
+        # If the above did not return, see if there are subcommunities to check
+        elif len(self.subcommunities) == 0:
+            return False
+        # Check through subcommunities
+        else:
+            for community in self.subcommunities:
+                if character in community:
+                    return True
+        return False
 
     def _contains_comm_case(self, community: Community) -> bool:
         """
