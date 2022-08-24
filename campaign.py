@@ -6,7 +6,7 @@ campaign
 """
 
 from __future__ import annotations
-import exceptions
+from exceptions import *
 from typing import List, Optional, Union, Set
 
 # Names for primary communities
@@ -82,11 +82,13 @@ class Community(WorldAsset):
     """
     members: Set[Character]
     subcommunities: Set[Community]
+    supercommunity: Optional[Community]
 
-    def __init__(self):
-        WorldAsset.__init__(self, 'test')
+    def __init__(self, name: str, upcomm: Optional[Community] = None) -> None:
+        WorldAsset.__init__(self, name)
         self.members = set()
         self.subcommunities = set()
+        self.supercommunity = upcomm
         # TODO: Finish this
         #   If there is no supercommunity, this MUST be named "World"
 
@@ -147,6 +149,34 @@ class Community(WorldAsset):
 
         TODO: Same as add_character, double check with user
         """
+
+    def remove_subcommunity(self, comm: Community) -> bool:
+        """
+        Remove <comm> from the immediate list of subcommunities
+        """
+
+    def promote(self) -> None:
+        """
+        Promote this community to being a direct subcommunity of its
+        supercommunity's supercommunity (i.e. its supercommunity is now the
+        same level)
+        """
+
+
+class World(Community):
+    """
+    The world all other WorldAssets inhabit.
+    """
+
+    def __init__(self):
+        pass
+        # TODO: Finish this
+
+    def promote(self) -> None:
+        """
+        The World cannot be promoted, so raise an error.
+        """
+        raise PromoteWorldError
 
 
 class Character(WorldAsset):
